@@ -1,1 +1,1 @@
-# py_vsk
+# Collection of Python Functions for Vasicek Distribution
