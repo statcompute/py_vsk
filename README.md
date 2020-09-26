@@ -1,3 +1,7 @@
+
+### <p align="center"> A Collection of Python Functions </p>
+### <p align="center"> for Vasicek Distribution (PY_VSK) </p>
+
 #### Introduction
 
 In the context of statistics, the Vasicek distribution is a continuous distribution governing the open interval between 0 and 1 with two parameters, namely Rho and P, which is similar to the Beta and Kumaraswamy distributions.
