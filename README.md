@@ -12,8 +12,8 @@ The Vasicek distribution has often been used to describe the portfolio credit lo
 
 ```
 py_vsk
-   |-- vsk_mle() : Estimate Vasicek parameters by using MLE.
-   |-- vsk_imm() : Estimate Vasicek parameters by using indirect moment matching.
+   |-- vsk_mle() : Estimates Vasicek parameters by using MLE.
+   |-- vsk_imm() : Estimates Vasicek parameters by using indirect moment matching.
    |-- vsk_pdf() : Calculates the probability density function of Vasicek.
    |-- vsk_cdf() : Calculates the probability cumulative function of Vasicek.
    |-- vsk_ppf() : Calculates the percentile point function (CDF inverse) of Vasicek.
