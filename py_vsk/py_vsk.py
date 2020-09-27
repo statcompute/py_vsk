@@ -1,7 +1,10 @@
 # py_vsk/py_vsk.py
-# 0.0.3
+# exec(open('py_vsk/py_vsk.py').read())
+# 0.0.4
 
-from scipy.stats import norm
+from scipy.stats import norm, chisquare, ks_2samp
+from statsmodels.distributions import empirical_distribution
+from py_mob import qcut
 import scipy.optimize, numpy
 
 ########## 01. vsk_mle() ########## 
@@ -109,7 +112,8 @@ def vsk_cdf(x, Rho, P):
     #  {'x': 0.5217229060260343, 'cdf': 0.8999999999999999}] 
   """  
   
-  _x = [_ for _ in x if _ > 0 and _ < 1 and not numpy.isnan(_)]
+  # _x = [_ for _ in x if _ > 0 and _ < 1 and not numpy.isnan(_)]
+  _x = [_ for _ in x if _ >= 0 and _ <= 1 and not numpy.isnan(_)]
 
   fn = lambda par: norm.cdf((numpy.sqrt(1 - par[0]) * norm.ppf(_x) - norm.ppf(par[1])) 
                    / numpy.sqrt(par[0]))
@@ -135,7 +139,8 @@ def vsk_ppf(Alpha, Rho, P):
     #  {'Alpha': 0.9, 'ppf': 0.5217229060260343}]
   """  
   
-  _a = [_ for _ in Alpha if _ > 0 and _ < 1 and not numpy.isnan(_)]
+  # _a = [_ for _ in Alpha if _ > 0 and _ < 1 and not numpy.isnan(_)]
+  _a = [_ for _ in Alpha if _ >= 0 and _ <= 1 and not numpy.isnan(_)]
 
   _p = norm.cdf((norm.ppf(P) + numpy.sqrt(Rho) * norm.ppf(_a)) / numpy.sqrt(1 - Rho))
                 
@@ -165,4 +170,75 @@ def vsk_rvs(n, Rho, P, seed = 1):
   rv = norm.cdf((norm.ppf(P) - numpy.sqrt(Rho) * rn) / numpy.sqrt(1 - Rho))
 
   return([_ for _ in rv])
+
+
+########## 07. gof_chisq() ##########
+
+def gof_chisq(x, Rho, P, n = 10):
+  """
+  The function performs chi-square goodness-of-fit test for the Vasicek distribution.
+  Parameters:
+    x   : A numeric vector in the interval of (0, 1) to test
+    Rho : The Rho parameter in the Vasicek distribution
+    P   : The P parameter in the Vasicek distribution
+    n   : The number of groups for the chi-square test. The value should be picked such
+          that all observed and expected frequencies should be at least 5.
+  Returns:
+    A dictionary with chi-square statistic, pvalue, and a table to calculate chi-square
+  Example:
+    import py_vsk
+    x = py_vsk.vsk_rvs(100, Rho = 0.2, P = 0.1)
+    gof_chisq(x, Rho = 0.2, P = 0.1)['stat']
+    # {'chisq': 11.0, 'pvalue': 0.27570893677222197}
+  """
+ 
+  _x = sorted([_ for _ in x if _ > 0 and _ < 1 and not numpy.isnan(_)])
+
+  ocdf = empirical_distribution.ECDF(_x)(_x)
+
+  ecdf = [_["cdf"] for _ in vsk_cdf(_x, Rho = Rho, P = P)]
+
+  _cut = [_ for _ in sorted(qcut(ecdf, n) + [0, 1])]
+
+  ogrp = numpy.searchsorted(_cut, ocdf).tolist()
+
+  egrp = numpy.searchsorted(_cut, ecdf).tolist()
+
+  _tbl = [dict(zip(["group", "observed", "expected"], 
+                   [g, len([_ for _ in ogrp if _ == g]), len([_ for _ in egrp if _ == g])])) 
+          for g in sorted(set(egrp))]
+
+  _rst = chisquare([_["observed"] for _ in _tbl], [_["expected"] for _ in _tbl])
+
+  return({"stat": {"chisq": _rst.statistic, "pvalue": _rst.pvalue}, "tbl": _tbl})
+
+
+########## 08. gof_ks() ##########
+
+def gof_ks(x, Rho, P):
+  """
+  The function performs Kolmogorov-Smirnov goodness-of-fit test for the Vasicek distribution.
+  Parameters:
+    x   : A numeric vector in the interval of (0, 1) to test
+    Rho : The Rho parameter in the Vasicek distribution
+    P   : The P parameter in the Vasicek distribution
+  Returns:
+    A dictionary with ks-statistic and pvalue
+  Example:
+    import py_vsk
+    x = py_vsk.vsk_rvs(100, Rho = 0.2, P = 0.1)
+    gof_ks(x, Rho = 0.2, P = 0.1)
+    # {'ks': 0.09, 'pvalue': 0.8154147124661313}
+  """
+ 
+  _x = sorted([_ for _ in x if _ > 0 and _ < 1 and not numpy.isnan(_)])
+
+  ocdf = empirical_distribution.ECDF(_x)(_x)
+
+  ecdf = [_["cdf"] for _ in vsk_cdf(_x, Rho = Rho, P = P)]
+
+  _rst = ks_2samp(ecdf, ocdf)
+
+  return({"ks": _rst.statistic, "pvalue": _rst.pvalue})
+
 
