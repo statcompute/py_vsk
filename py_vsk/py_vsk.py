@@ -1,11 +1,13 @@
 # py_vsk/py_vsk.py
 # exec(open('py_vsk/py_vsk.py').read())
-# 0.0.4
+# 0.0.5
 
-from scipy.stats import norm, chisquare, ks_2samp
+from scipy.stats import norm, chisquare, ks_2samp, multivariate_normal
+from scipy.optimize import minimize, minimize_scalar
 from statsmodels.distributions import empirical_distribution
 from py_mob import qcut
-import scipy.optimize, numpy
+import numpy
+
 
 ########## 01. vsk_mle() ########## 
 
@@ -30,7 +32,7 @@ def vsk_mle(x):
                    -1 / (2 * par[0]) * numpy.square(numpy.sqrt(1 - par[0]) * norm.ppf(_x) 
                    - norm.ppf(par[1])) + 1 / 2 * numpy.square(norm.ppf(_x)))))
   
-  rs = scipy.optimize.minimize(fn, (0.1, numpy.mean(_x)), method = 'Nelder-Mead')
+  rs = minimize(fn, (0.1, numpy.mean(_x)), method = 'Nelder-Mead')
   
   return({"Rho": round(rs.x[0], 10), "P": round(rs.x[1], 10)})
   
@@ -65,7 +67,71 @@ def vsk_imm(x):
   return({"Rho": round(_r, 10), "P": round(_p, 10)})  
 
 
-########## 03. vsk_pdf() ########## 
+########## 03. vsk_dmm() ##########
+
+def vsk_dmm(x):
+  """
+  The function estimates Vasicek parameters by using direct moment matching.
+  Parameters:
+    x   : A numeric vector in the interval of (0, 1), which can be a list,
+          1-D numpy array, or pandas series
+  Returns:
+    A dictionary with parameters in the Vasicek distribution
+  Example:
+    import py_vsk
+    x = py_vsk.vsk_rvs(1000, Rho = 0.2, P = 0.3)
+    py_vsk.vsk_dmm(x)
+    # {'Rho': 0.1962500586, 'P': 0.2928264265}
+  """
+
+  _x = [_ for _ in x if _ > 0 and _ < 1 and not numpy.isnan(_)]
+
+  _p = numpy.mean(_x)
+
+  xx = numpy.mean(numpy.square(_x))
+
+  mu = numpy.array([0, 0])
+
+  fn = lambda _r: abs(multivariate_normal(mean = mu, cov = numpy.array([[1, _r], [_r, 1]])).
+                      cdf([norm.ppf(_p), norm.ppf(_p)]) - xx)
+
+  _r = minimize_scalar(fn, bounds = (0, 1), method = "bounded").x
+
+  return({"Rho": round(_r, 10), "P": round(_p, 10)}) 
+ 
+ 
+########## 04. vsk_qbe() ##########
+
+def vsk_qbe(x):
+  """
+  The function estimates Vasicek parameters by using quantile-based estimator.
+  It is not recommended for small-size samples
+  Parameters:
+    x   : A numeric vector in the interval of (0, 1), which can be a list,
+          1-D numpy array, or pandas series
+  Returns:
+    A dictionary with parameters in the Vasicek distribution
+  Example:
+    import py_vsk
+    x = py_vsk.vsk_rvs(1000, Rho = 0.2, P = 0.3)
+    py_vsk.vsk_qbe(x)
+    # {'Rho': 0.1844122282, 'P': 0.2918011804}
+  """
+
+  _x = norm.ppf([_ for _ in x if _ > 0 and _ < 1 and not numpy.isnan(_)])
+
+  mu = numpy.quantile(_x, 0.50)
+
+  s2 = numpy.square((numpy.quantile(_x, 0.75) - mu) / norm.ppf(0.75))
+
+  _r = s2 / (1 + s2)
+
+  _p = norm.cdf(mu / (numpy.sqrt(1 + s2)))
+
+  return({"Rho": round(_r, 10), "P": round(_p, 10)}) 
+
+
+########## 05. vsk_pdf() ########## 
 
 def vsk_pdf(x, Rho, P):
   """
@@ -93,7 +159,7 @@ def vsk_pdf(x, Rho, P):
   return([{"x": _[0], "pdf": _[1]} for _ in zip(_x, fn([Rho, P]))])
 
 
-########## 04. vsk_cdf() ########## 
+########## 06. vsk_cdf() ########## 
 
 def vsk_cdf(x, Rho, P):
   """
@@ -121,7 +187,7 @@ def vsk_cdf(x, Rho, P):
   return([{"x": _[0], "cdf": _[1]} for _ in zip(_x, fn([Rho, P]))])
 
 
-########## 05. vsk_ppf() ##########
+########## 07. vsk_ppf() ##########
 
 def vsk_ppf(Alpha, Rho, P):
   """
@@ -147,7 +213,7 @@ def vsk_ppf(Alpha, Rho, P):
   return([{"Alpha": _[0], "ppf": _[1]} for _ in zip(_a, _p)])
 
 
-########## 06. vsk_rvs() ##########
+########## 08. vsk_rvs() ##########
 
 def vsk_rvs(n, Rho, P, seed = 1):
   """
@@ -172,7 +238,7 @@ def vsk_rvs(n, Rho, P, seed = 1):
   return([_ for _ in rv])
 
 
-########## 07. gof_chisq() ##########
+########## 09. gof_chisq() ##########
 
 def gof_chisq(x, Rho, P, n = 10):
   """
@@ -213,7 +279,7 @@ def gof_chisq(x, Rho, P, n = 10):
   return({"stat": {"chisq": _rst.statistic, "pvalue": _rst.pvalue}, "tbl": _tbl})
 
 
-########## 08. gof_ks() ##########
+########## 10. gof_ks() ##########
 
 def gof_ks(x, Rho, P):
   """
@@ -240,5 +306,4 @@ def gof_ks(x, Rho, P):
   _rst = ks_2samp(ecdf, ocdf)
 
   return({"ks": _rst.statistic, "pvalue": _rst.pvalue})
-
 
