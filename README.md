@@ -24,3 +24,7 @@ py_vsk
    |-- gof_ks()    : Performs the Kolmogorov-Smirnov goodness-of-fit test for the Vasicek distribution
    `-- gof_chisq() : Performs the Chi-Square goodness-of-fit test for the Vasicek distribution
 ```
+
+#### Reference
+
+Tasche, Dirk. (2008). The Vasicek Distribution.
