@@ -21,8 +21,8 @@ py_vsk
    |-- vsk_cdf()   : Calculates the cumulative distribution function of Vasicek.
    |-- vsk_ppf()   : Calculates the percentile point function (CDF inverse) of Vasicek.
    |-- vsk_rvs()   : Generates random numbers following the Vasicek distribution
-   |-- gof_ks()    : Performs the Kolmogorov-Smirnov goodness-of-fit test for the Vasicek distribution
-   `-- gof_chisq() : Performs the Chi-Square goodness-of-fit test for the Vasicek distribution
+   |-- gof_ks()    : Performs the Kolmogorov-Smirnov GoF test for the Vasicek distribution
+   `-- gof_chisq() : Performs the Chi-Square GoF test for the Vasicek distribution
 ```
 
 #### Reference
