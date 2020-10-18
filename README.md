@@ -28,20 +28,20 @@ py_vsk
 
 #### Example
 
-While default rates cannot be predicted with certainty, the probability of future default rate can be assessed based on the appropriate statistical distribution. 
+While future default rates cannot be predicted with certainty, the probability of default rates can be assessed based on the appropriate statistical distribution. 
 
 Below is the list of default rates for 100 largest banks in the last 20 years (https://www.federalreserve.gov/releases/chargeoff/deltop100nsa.htm). 
 ```python
 df = [0.0171, 0.0214, 0.0275, 0.0317, 0.0400, 0.0533, 0.0692, 0.0901, 0.0984, 0.1051, 
       0.1117, 0.0684, 0.0317, 0.0190, 0.0158, 0.0139, 0.0179, 0.0200, 0.0241, 0.0264]
 ```
-Based on the above, we can estimate parameters of the corresponding Vasicek distribution. While the P parameter shows the long-term average of default rates, the Rho parameter describes the degree of default rates related to the systematic risk factors.  
+Based on the above, we can estimate parameters of the corresponding Vasicek distribution. While the P parameter shows the long-term average of default rates, the Rho parameter describes the degree of default rates related to systematic risk factors.  
 ```python
 import py_vsk
 py_vsk.vsk_mle(df)
 # {'Rho': 0.0939762321, 'P': 0.0446574471}
 ```
-While the default rate reached the highest of 11.17% in 2009, this default rate is equivalent to ~96%ile in the Vasicek distribution. 
+The default rate reached the highest of 11.17% in 2009 and is equivalent to ~96%ile in the corresponding Vasicek distribution, suggesting that the 2009 downturn is an 1-in-25 event.
 ```python
 py_vsk.vsk_cdf([max(df)], 0.0939762321, 0.0446574471)
 # [{'x': 0.1117, 'cdf': 0.9609532701414676}]
