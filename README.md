@@ -30,23 +30,23 @@ py_vsk
 
 While future default rates cannot be predicted with certainty, the probability of default rates can be assessed based on the appropriate statistical distribution. 
 
-Below is the list of default rates for 100 largest banks in the last 20 years (https://www.federalreserve.gov/releases/chargeoff/deltop100nsa.htm). 
+Below is the list of delinquent rates for 100 largest banks in the last 20 years (https://www.federalreserve.gov/releases/chargeoff/deltop100nsa.htm). 
 ```python
 df = [0.0171, 0.0214, 0.0275, 0.0317, 0.0400, 0.0533, 0.0692, 0.0901, 0.0984, 0.1051, 
       0.1117, 0.0684, 0.0317, 0.0190, 0.0158, 0.0139, 0.0179, 0.0200, 0.0241, 0.0264]
 ```
-Based on the above, we can estimate parameters of the corresponding Vasicek distribution. While the P parameter shows the long-term average of default rates, the Rho parameter describes the degree of association with systematic risk factors.  
+Based on the above, we can estimate parameters of the corresponding Vasicek distribution. While the P parameter shows the long-term average of delinquent rates, the Rho parameter describes the degree of association with systematic risk factors.  
 ```python
 import py_vsk
 py_vsk.vsk_mle(df)
 # {'Rho': 0.0939762321, 'P': 0.0446574471}
 ```
-The default rate reached the highest of 11.17% in 2009 and is equivalent to ~96%ile in the corresponding Vasicek distribution, suggesting that the 2009 downturn is an 1-in-25 event.
+The delinquent rate reached the highest of 11.17% in 2009 and is equivalent to ~96%ile in the corresponding Vasicek distribution, suggesting that the 2009 downturn is an 1-in-25 event.
 ```python
 py_vsk.vsk_cdf([max(df)], 0.0939762321, 0.0446574471)
 # [{'x': 0.1117, 'cdf': 0.9609532701414676}]
 ```
-In addition, the result below shows that there is an 1% chance that the default rate could be as high as 15%. 
+In addition, the result below shows that there is an 1% chance that the delinquent rate could be as high as 15%. 
 ```python
 py_vsk.vsk_ppf([0.99], 0.0939762321, 0.0446574471)
 # [{'Alpha': 0.99, 'ppf': 0.15016266823403973}]
