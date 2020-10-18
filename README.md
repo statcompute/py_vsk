@@ -35,7 +35,7 @@ Below is the list of default rates for 100 largest banks in the last 15 years (h
 df = [0.0171, 0.0214, 0.0275, 0.0317, 0.0400, 0.0533, 0.0692, 0.0901, 0.0984, 0.1051, 
       0.1117, 0.0684, 0.0317, 0.0190, 0.0158]
 ```
-Based on the above, we can calculate parameters of the corresponding Vasicek distribution.
+Based on the above, we can estimate parameters of the corresponding Vasicek distribution.
 ```python
 import py_vsk
 py_vsk.vsk_mle(df)
