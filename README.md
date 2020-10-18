@@ -13,16 +13,17 @@ The Vasicek distribution has often been used to describe the portfolio credit lo
 
 ```
 py_vsk
-   |-- vsk_mle()   : Estimates Vasicek parameters by using MLE.
-   |-- vsk_imm()   : Estimates Vasicek parameters by using indirect moment matching.
-   |-- vsk_dmm()   : Estimates Vasicek parameters by using direct moment matching.
-   |-- vsk_qbe()   : Estimates Vasicek parameters by using quantile-based estimator.
-   |-- vsk_pdf()   : Calculates the probability density function of Vasicek.
-   |-- vsk_cdf()   : Calculates the cumulative distribution function of Vasicek.
-   |-- vsk_ppf()   : Calculates the percentile point function (CDF inverse) of Vasicek.
-   |-- vsk_rvs()   : Generates random numbers following the Vasicek distribution
-   |-- gof_ks()    : Performs the Kolmogorov-Smirnov GoF test for the Vasicek distribution
-   `-- gof_chisq() : Performs the Chi-Square GoF test for the Vasicek distribution
+  |-- vsk_mle()   : Estimates Vasicek parameters by using MLE.
+  |-- vsk_imm()   : Estimates Vasicek parameters by using indirect moment matching.
+  |-- vsk_dmm()   : Estimates Vasicek parameters by using direct moment matching.
+  |-- vsk_qbe()   : Estimates Vasicek parameters by using quantile-based estimator.
+  |-- vsk_pdf()   : Calculates the probability density function of Vasicek.
+  |-- vsk_cdf()   : Calculates the probability cumulative function of Vasicek.
+  |-- vsk_ppf()   : Calculates the percentile point function (CDF inverse) of Vasicek.
+  |-- vsk_rvs()   : Generates random numbers following the Vasicek distribution.
+  |-- get_Rho()   : Solves for the Rho parameter such that vsk_cdf(x, Rho, P) = Alpha.
+  |-- gof_ks()    : Performs the Kolmogorov-Smirnov GoF test for the Vasicek distribution.
+  `-- gof_chisq() : Performs the Chi-Square GoF test for the Vasicek distribution.
 ```
 
 #### Example
