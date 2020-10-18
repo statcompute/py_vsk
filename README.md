@@ -43,12 +43,12 @@ py_vsk.vsk_mle(df)
 ```
 While the default rate reached the highest of 11.17% in 2009, this default rate is equivalent to ~96%ile in the Vasicek distribution. 
 ```python
-py_vsk.vsk_cdf([max(df)], 0.0939762321,  0.0446574471)
+py_vsk.vsk_cdf([max(df)], 0.0939762321, 0.0446574471)
 # [{'x': 0.1117, 'cdf': 0.9609532701414676}]
 ```
 In addition, the result below shows that there is an 1% chance that the default rate could be as high as 15%. 
 ```python
-py_vsk.vsk_ppf([0.99], 0.0939762321,  0.0446574471)
+py_vsk.vsk_ppf([0.99], 0.0939762321, 0.0446574471)
 # [{'Alpha': 0.99, 'ppf': 0.15016266823403973}]
 ```
 
