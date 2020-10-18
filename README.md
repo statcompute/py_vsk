@@ -35,7 +35,7 @@ Below is the list of default rates for 100 largest banks in the last 20 years (h
 df = [0.0171, 0.0214, 0.0275, 0.0317, 0.0400, 0.0533, 0.0692, 0.0901, 0.0984, 0.1051, 
       0.1117, 0.0684, 0.0317, 0.0190, 0.0158, 0.0139, 0.0179, 0.0200, 0.0241, 0.0264]
 ```
-Based on the above, we can estimate parameters of the corresponding Vasicek distribution. While the P parameter shows the long-term average of default rates, the Rho parameter describes the degree of default rates related to systematic risk factors.  
+Based on the above, we can estimate parameters of the corresponding Vasicek distribution. While the P parameter shows the long-term average of default rates, the Rho parameter describes the degree of association with systematic risk factors.  
 ```python
 import py_vsk
 py_vsk.vsk_mle(df)
