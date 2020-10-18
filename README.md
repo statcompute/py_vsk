@@ -1,6 +1,6 @@
 
-### <p align="center"> A Collection of Python Functions </p>
-### <p align="center"> for Vasicek Distribution (PY_VSK) </p>
+### <p align="center"> PY_VSK - A Collection of Python Functions </p>
+### <p align="center"> for Vasicek Distribution  </p>
 
 #### Introduction
 
