@@ -17,6 +17,7 @@ py_vsk
   |-- vsk_imm()   : Estimates Vasicek parameters by using indirect moment matching.
   |-- vsk_dmm()   : Estimates Vasicek parameters by using direct moment matching.
   |-- vsk_qbe()   : Estimates Vasicek parameters by using quantile-based estimator.
+  |-- vsk_Rho()   : Estimates the Rho parameter by assuming P known and varying.
   |-- vsk_pdf()   : Calculates the probability density function of Vasicek.
   |-- vsk_cdf()   : Calculates the probability cumulative function of Vasicek.
   |-- vsk_ppf()   : Calculates the percentile point function (CDF inverse) of Vasicek.
